@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Instagram, Facebook, Share2 } from 'lucide-react';
 import { NavItem, SiteConfig } from '../types';
+import { TermsModal, PrivacyModal } from './LegalModals';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -49,6 +50,10 @@ const Logo = () => (
 export const Layout: React.FC<LayoutProps> = ({ children, config, onNavigate, currentPage }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  // State for legal modals
+  const [showTerms, setShowTerms] = useState(false);
+  const [showPrivacy, setShowPrivacy] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -172,6 +177,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, config, onNavigate, cu
                  {/* Reusing logo structure for footer but simplified/monochrome if needed, or just text */}
                  <h3 className="text-2xl font-black tracking-tight">FARMLAND</h3>
                  <p className="text-[10px] text-gray-400 font-normal">농업회사법인 주식회사 팜랜드</p>
+                 <p className="text-[10px] text-gray-400 font-normal mt-0.5">대표이사: 김진근</p>
               </div>
               <p className="text-gray-400 text-sm leading-relaxed font-light">
                 자연의 정직함과<br />첨단 기술의 조화로<br />최상의 가치를 전달합니다.
@@ -212,11 +218,33 @@ export const Layout: React.FC<LayoutProps> = ({ children, config, onNavigate, cu
               </div>
             </div>
           </div>
-          <div className="border-t border-gray-700 mt-12 pt-8 text-center text-gray-500 text-xs font-light">
-            &copy; {new Date().getFullYear()} {config.companyName}. All rights reserved.
+          <div className="border-t border-gray-700 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center text-center md:text-left gap-4">
+            <div className="text-gray-500 text-xs font-light">
+              &copy; {new Date().getFullYear()} {config.companyName}. All rights reserved.
+            </div>
+            
+            {/* Legal Links */}
+            <div className="flex gap-6 text-xs text-gray-400">
+              <button 
+                onClick={() => setShowTerms(true)}
+                className="hover:text-white transition-colors border-b border-transparent hover:border-white"
+              >
+                이용약관
+              </button>
+              <button 
+                onClick={() => setShowPrivacy(true)}
+                className="hover:text-white transition-colors border-b border-transparent hover:border-white font-bold"
+              >
+                개인정보처리방침
+              </button>
+            </div>
           </div>
         </div>
       </footer>
+      
+      {/* Legal Modals */}
+      <TermsModal isOpen={showTerms} onClose={() => setShowTerms(false)} config={config} />
+      <PrivacyModal isOpen={showPrivacy} onClose={() => setShowPrivacy(false)} config={config} />
     </div>
   );
 };
