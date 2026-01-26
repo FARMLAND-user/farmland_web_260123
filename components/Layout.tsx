@@ -72,18 +72,33 @@ export const Layout: React.FC<LayoutProps> = ({ children, config, onNavigate, cu
     setIsMobileMenuOpen(false);
   };
 
+  // Prevent body scroll when menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobileMenuOpen]);
+
   return (
     <div className="min-h-screen flex flex-col font-sans text-gray-800">
       {/* Navbar */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled ? 'bg-white/95 backdrop-blur-sm shadow-md py-3' : 'bg-white/90 backdrop-blur-sm py-5 shadow-sm'
+          // Force solid white background when mobile menu is open for better visibility
+          isMobileMenuOpen 
+            ? 'bg-white shadow-none' 
+            : (isScrolled ? 'bg-white/95 backdrop-blur-sm shadow-md py-3' : 'bg-white/90 backdrop-blur-sm py-5 shadow-sm')
         }`}
       >
-        <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
+        <div className="container mx-auto px-4 md:px-6 flex justify-between items-center relative z-50">
           {/* Logo */}
           <div 
-            className="cursor-pointer z-50"
+            className="cursor-pointer"
             onClick={() => handleNavClick('#home')}
           >
             <Logo />
@@ -102,22 +117,15 @@ export const Layout: React.FC<LayoutProps> = ({ children, config, onNavigate, cu
                 {item.label}
               </button>
             ))}
-             <button
-                onClick={() => handleNavClick('/admin')}
-                className={`text-xs font-medium tracking-wide transition-colors border px-3 py-1.5 rounded-full ${
-                   isScrolled ? 'border-gray-300 text-gray-500 hover:border-primary hover:text-primary' : 'border-gray-400 text-gray-600 hover:border-primary hover:text-primary'
-                }`}
-              >
-                관리자
-              </button>
           </nav>
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden z-50 text-gray-800"
+            className="md:hidden p-2 -mr-2 text-gray-800 hover:text-primary transition-colors focus:outline-none"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label={isMobileMenuOpen ? "메뉴 닫기" : "메뉴 열기"}
           >
-            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {isMobileMenuOpen ? <X className="h-7 w-7" /> : <Menu className="h-7 w-7" />}
           </button>
         </div>
 
@@ -125,23 +133,28 @@ export const Layout: React.FC<LayoutProps> = ({ children, config, onNavigate, cu
         <div
           className={`fixed inset-0 bg-white z-40 transform transition-transform duration-300 ease-in-out ${
             isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-          } md:hidden flex flex-col justify-center items-center space-y-8`}
+          } md:hidden flex flex-col justify-center items-center`}
         >
-          {NAV_ITEMS.map((item) => (
-            <button
-              key={item.label}
-              onClick={() => handleNavClick(item.href)}
-              className="text-2xl font-bold text-gray-800 hover:text-primary transition-colors"
-            >
-              {item.label}
-            </button>
-          ))}
-           <button
-              onClick={() => handleNavClick('/admin')}
-              className="text-lg font-medium text-gray-500 hover:text-primary mt-4"
-            >
-              관리자 로그인
-            </button>
+          <div className="flex flex-col space-y-10 items-center w-full px-8">
+            {NAV_ITEMS.map((item) => (
+              <button
+                key={item.label}
+                onClick={() => handleNavClick(item.href)}
+                className="text-3xl font-black text-gray-900 hover:text-primary transition-colors tracking-tight w-full text-center py-2 active:scale-95 duration-200"
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+          
+          {/* Mobile Menu Footer Info */}
+          <div className="absolute bottom-12 text-center">
+            <p className="text-xs text-gray-400 font-medium tracking-wider uppercase mb-2">Farmland Co., Ltd.</p>
+            <div className="flex gap-6 justify-center text-gray-400">
+               <Instagram size={20} />
+               <Facebook size={20} />
+            </div>
+          </div>
         </div>
       </header>
 
@@ -179,7 +192,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, config, onNavigate, cu
               <ul className="space-y-2 text-gray-400 text-sm font-light">
                 <li>프리미엄 농산물 유통</li>
                 <li>신선 전처리 공정</li>
-                <li>스마트팜 솔루션</li>
+                <li>농산물 공급/가공/유통</li>
                 <li>계약 재배 및 컨설팅</li>
               </ul>
             </div>

@@ -54,7 +54,8 @@ export const Home: React.FC<HomeProps> = ({ posts, config }) => {
 
         <div className="relative z-10 container mx-auto px-4 text-center text-white animate-fade-in-up">
           <span className="block text-accent-beige font-bold tracking-[0.3em] mb-6 uppercase text-sm md:text-base">Premium Agriculture</span>
-          <h1 className="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tight">
+          {/* Adjusted font size for mobile: text-3xl to ensure 2 lines */}
+          <h1 className="text-3xl sm:text-4xl md:text-7xl font-black mb-8 leading-tight tracking-tight">
             자연이 주는<br />
             정직한 가치, <span className="text-primary-light">팜랜드</span>
           </h1>
