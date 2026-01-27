@@ -157,7 +157,6 @@ export const Home: React.FC<HomeProps> = ({ posts, config }) => {
                />
                <div className="absolute -bottom-6 -right-6 bg-primary text-white p-8 rounded-2xl shadow-xl hidden lg:block">
                  <p className="text-sm font-bold opacity-80 mb-1">Quality First</p>
-
                </div>
             </motion.div>
             <motion.div 
@@ -182,7 +181,7 @@ export const Home: React.FC<HomeProps> = ({ posts, config }) => {
                 </div>
                 <div>
                   <h4 className="font-black text-5xl text-primary mb-2"><AnimatedCounter from={0} to={185} /></h4>
-                  <p className="text-xs text-gray-400 font-bold uppercase tracking-[0.2em]">Global Partners</p>
+                  <p className="text-xs text-gray-400 font-bold uppercase tracking-[0.2em]">Partners</p>
                 </div>
               </div>
             </motion.div>

@@ -20,11 +20,11 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 const Logo = ({ isDark = false, showCEO = false }: { isDark?: boolean; showCEO?: boolean }) => (
-  <div className="flex flex-col items-start select-none">
-    <span className={`text-2xl font-black tracking-tighter leading-none mb-1 ${isDark ? 'text-white' : 'text-[#2F3E1B]'}`}>FARMLAND</span>
+  <div className="flex flex-col items-start select-none gap-1">
+    <span className={`text-2xl font-black tracking-tighter leading-none ${isDark ? 'text-white' : 'text-[#2F3E1B]'}`}>FARMLAND</span>
     <span className={`text-[11px] font-medium tracking-tighter leading-none ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>농업회사법인 주식회사 팜랜드</span>
     {showCEO && (
-      <span className={`text-[11px] font-medium tracking-tighter leading-none mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>대표 김진근</span>
+      <span className={`text-[11px] font-medium tracking-tighter leading-none ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>대표 김진근</span>
     )}
   </div>
 );
