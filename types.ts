@@ -1,3 +1,4 @@
+
 export enum PostCategory {
   NEWS = 'NEWS',
   PRESS = 'PRESS',
@@ -23,7 +24,9 @@ export interface SiteConfig {
   heroSubtitle: string;
   heroDescription: string;
   heroImage: string;
-  adminPassword?: string; // 관리자 비밀번호 필드 추가
+  aboutImage: string; // 추가
+  bannerImage: string; // 추가
+  adminPassword?: string;
 }
 
 export interface NavItem {

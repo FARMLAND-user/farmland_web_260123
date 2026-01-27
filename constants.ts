@@ -1,3 +1,4 @@
+
 import { Post, PostCategory, SiteConfig } from './types';
 
 export const INITIAL_CONFIG: SiteConfig = {
@@ -10,6 +11,8 @@ export const INITIAL_CONFIG: SiteConfig = {
   heroSubtitle: "Premium Agriculture",
   heroDescription: "우리는 땅의 정직함을 믿습니다.\n첨단 기술과 자연의 조화로 최고의 농산물을 제공합니다.",
   heroImage: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=2000",
+  aboutImage: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&q=80&w=1200",
+  bannerImage: "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000",
   adminPassword: "admin1234"
 };
 

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Post, SiteConfig } from '../types';
 import { ArrowRight, Leaf, Truck, Building2, MapPin, Phone, Mail } from 'lucide-react';
@@ -151,7 +152,7 @@ export const Home: React.FC<HomeProps> = ({ posts, config }) => {
               transition={{ duration: 1 }}
             >
                <img 
-                 src="https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&q=80&w=1200" 
+                 src={config.aboutImage || "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&q=80&w=1200"} 
                  alt="Fresh Greens" 
                  className="w-full h-[450px] object-cover rounded-2xl shadow-2xl" 
                />
@@ -222,7 +223,7 @@ export const Home: React.FC<HomeProps> = ({ posts, config }) => {
       <section ref={bannerRef} className="relative h-[400px] md:h-[550px] overflow-hidden flex items-center bg-zinc-900">
         <motion.div className="absolute inset-0 z-0" style={{ y: yBanner }}>
           <img 
-            src="https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000" 
+            src={config.bannerImage || "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000"} 
             alt="Agricultural Innovation" 
             className="w-full h-[120%] object-cover brightness-[0.6] object-center"
           />

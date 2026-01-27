@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react';
 import { Post, SiteConfig, PostCategory } from '../types';
 import { Settings, PenTool, Layout as LayoutIcon, Trash2, Plus, Save, ArrowLeft, Lock, Image as ImageIcon, User, Upload } from 'lucide-react';
@@ -16,7 +17,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
-  const [activeTab, setActiveTab] = useState<'content' | 'settings' | 'account'>('content');
+  const [activeTab, setActiveTab] = useState<'content' | 'images' | 'settings' | 'account'>('content');
   
   // Post state
   const [newPost, setNewPost] = useState<Partial<Post>>({
@@ -41,12 +42,23 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     onUpdateConfig({ ...config, [name]: value });
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePostImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setNewPost({ ...newPost, imageUrl: reader.result as string });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleConfigImageUpload = (name: keyof SiteConfig, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        onUpdateConfig({ ...config, [name]: reader.result as string });
       };
       reader.readAsDataURL(file);
     }
@@ -115,6 +127,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <button onClick={() => setActiveTab('content')} className={`flex items-center gap-3 p-3 rounded w-full text-left transition-colors ${activeTab === 'content' ? 'bg-primary' : 'hover:bg-zinc-800'}`}>
             <PenTool size={18}/> 게시물 관리
           </button>
+          <button onClick={() => setActiveTab('images')} className={`flex items-center gap-3 p-3 rounded w-full text-left transition-colors ${activeTab === 'images' ? 'bg-primary' : 'hover:bg-zinc-800'}`}>
+            <ImageIcon size={18}/> 이미지 관리
+          </button>
           <button onClick={() => setActiveTab('settings')} className={`flex items-center gap-3 p-3 rounded w-full text-left transition-colors ${activeTab === 'settings' ? 'bg-primary' : 'hover:bg-zinc-800'}`}>
             <LayoutIcon size={18}/> 사이트 설정
           </button>
@@ -132,9 +147,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       <main className="flex-1 p-10 overflow-y-auto">
         {activeTab === 'content' ? (
           <div className="max-w-4xl space-y-8 animate-fade-in-up">
-            <h1 className="text-2xl font-bold">게시물 관리</h1>
+            <h1 className="text-2xl font-bold">게시물 및 소식 이미지 관리</h1>
             <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200">
-               <h3 className="font-bold mb-6 text-lg flex items-center gap-2"><Plus size={20} className="text-primary"/> 새 소식 추가</h3>
+               <h3 className="font-bold mb-6 text-lg flex items-center gap-2"><Plus size={20} className="text-primary"/> 새 소식 추가 (최신소식 이미지 포함)</h3>
                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                  <div>
                    <label className="block text-xs font-bold text-gray-400 mb-1 uppercase">제목</label>
@@ -165,7 +180,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                        type="file" 
                        accept="image/*" 
                        ref={fileInputRef}
-                       onChange={handleImageUpload}
+                       onChange={handlePostImageUpload}
                        className="hidden" 
                        id="post-image-upload"
                      />
@@ -175,7 +190,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                      >
                        <Upload size={16} /> 파일 선택
                      </label>
-                     <p className="text-xs text-gray-400 mt-2">추천 사이즈: 800x600px (JPG, PNG)</p>
                    </div>
                  </div>
                </div>
@@ -192,33 +206,106 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                <table className="w-full text-left">
                  <thead className="bg-gray-50 border-b">
                     <tr>
-                      <th className="p-4 text-xs font-bold text-gray-400 uppercase">미리보기</th>
+                      <th className="p-4 text-xs font-bold text-gray-400 uppercase">이미지</th>
                       <th className="p-4 text-xs font-bold text-gray-400 uppercase">제목</th>
                       <th className="p-4 text-xs font-bold text-gray-400 uppercase">날짜</th>
                       <th className="p-4 text-xs font-bold text-gray-400 uppercase text-right">관리</th>
                     </tr>
                  </thead>
                  <tbody className="divide-y">
-                    {posts.length === 0 ? (
-                      <tr><td colSpan={4} className="p-10 text-center text-gray-400">등록된 게시물이 없습니다.</td></tr>
-                    ) : (
-                      posts.map(post => (
-                        <tr key={post.id} className="hover:bg-gray-50 transition-colors">
-                          <td className="p-4 w-20">
-                            <img src={post.imageUrl} className="w-12 h-12 rounded object-cover border" />
-                          </td>
-                          <td className="p-4 font-medium">{post.title}</td>
-                          <td className="p-4 text-gray-500 text-sm">{post.date}</td>
-                          <td className="p-4 text-right">
-                            <button onClick={() => onDeletePost(post.id)} className="text-red-400 hover:text-red-600 p-2 rounded-full hover:bg-red-50 transition-all">
-                              <Trash2 size={18}/>
-                            </button>
-                          </td>
-                        </tr>
-                      ))
-                    )}
+                    {posts.map(post => (
+                      <tr key={post.id} className="hover:bg-gray-50 transition-colors">
+                        <td className="p-4 w-20">
+                          <img src={post.imageUrl} className="w-12 h-12 rounded object-cover border" />
+                        </td>
+                        <td className="p-4 font-medium">{post.title}</td>
+                        <td className="p-4 text-gray-500 text-sm">{post.date}</td>
+                        <td className="p-4 text-right">
+                          <button onClick={() => onDeletePost(post.id)} className="text-red-400 hover:text-red-600 p-2 rounded-full hover:bg-red-50 transition-all">
+                            <Trash2 size={18}/>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
                  </tbody>
                </table>
+            </div>
+          </div>
+        ) : activeTab === 'images' ? (
+          <div className="max-w-4xl space-y-8 animate-fade-in-up">
+            <h1 className="text-2xl font-bold">이미지 통합 관리</h1>
+            <p className="text-gray-500">홈페이지의 각 섹션별 이미지를 직접 수정할 수 있습니다.</p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Hero Image Section */}
+              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                <h3 className="font-bold mb-4 text-lg border-b pb-2">메인 히어로 이미지</h3>
+                <div className="mb-4 aspect-video rounded-lg overflow-hidden border">
+                  <img src={config.heroImage} className="w-full h-full object-cover" />
+                </div>
+                <div className="space-y-4">
+                  <input 
+                    type="file" accept="image/*" id="hero-img-up" className="hidden" 
+                    onChange={e => handleConfigImageUpload('heroImage', e)} 
+                  />
+                  <label htmlFor="hero-img-up" className="w-full flex items-center justify-center gap-2 bg-primary text-white py-3 rounded-lg cursor-pointer hover:bg-primary-dark transition-colors font-bold">
+                    <Upload size={18}/> 이미지 교체하기
+                  </label>
+                  <input 
+                    name="heroImage" value={config.heroImage} onChange={handleConfigChange}
+                    className="w-full border p-2 text-xs rounded outline-none focus:ring-1 focus:ring-primary" 
+                    placeholder="또는 이미지 URL 직접 입력"
+                  />
+                </div>
+              </div>
+
+              {/* About Section Image */}
+              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                <h3 className="font-bold mb-4 text-lg border-b pb-2">OUR PHILOSOPHY 이미지</h3>
+                <div className="mb-4 aspect-video rounded-lg overflow-hidden border">
+                  <img src={config.aboutImage} className="w-full h-full object-cover" />
+                </div>
+                <div className="space-y-4">
+                  <input 
+                    type="file" accept="image/*" id="about-img-up" className="hidden" 
+                    onChange={e => handleConfigImageUpload('aboutImage', e)} 
+                  />
+                  <label htmlFor="about-img-up" className="w-full flex items-center justify-center gap-2 bg-primary text-white py-3 rounded-lg cursor-pointer hover:bg-primary-dark transition-colors font-bold">
+                    <Upload size={18}/> 이미지 교체하기
+                  </label>
+                  <input 
+                    name="aboutImage" value={config.aboutImage} onChange={handleConfigChange}
+                    className="w-full border p-2 text-xs rounded outline-none focus:ring-1 focus:ring-primary" 
+                    placeholder="또는 이미지 URL 직접 입력"
+                  />
+                </div>
+              </div>
+
+              {/* Banner Section Image */}
+              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 md:col-span-2">
+                <h3 className="font-bold mb-4 text-lg border-b pb-2">농산물 배너 이미지 (Trendy Banner)</h3>
+                <div className="mb-4 h-48 rounded-lg overflow-hidden border">
+                  <img src={config.bannerImage} className="w-full h-full object-cover" />
+                </div>
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className="flex-1 space-y-4">
+                    <input 
+                      type="file" accept="image/*" id="banner-img-up" className="hidden" 
+                      onChange={e => handleConfigImageUpload('bannerImage', e)} 
+                    />
+                    <label htmlFor="banner-img-up" className="w-full flex items-center justify-center gap-2 bg-primary text-white py-4 rounded-lg cursor-pointer hover:bg-primary-dark transition-colors font-bold">
+                      <Upload size={18}/> 배너 이미지 교체하기
+                    </label>
+                  </div>
+                  <div className="flex-1 flex flex-col justify-center">
+                    <label className="text-xs text-gray-400 font-bold mb-1">배너 이미지 URL 직접 입력</label>
+                    <input 
+                      name="bannerImage" value={config.bannerImage} onChange={handleConfigChange}
+                      className="w-full border p-3 text-sm rounded outline-none focus:ring-1 focus:ring-primary" 
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         ) : activeTab === 'settings' ? (
@@ -226,7 +313,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             <h1 className="text-2xl font-bold">사이트 설정</h1>
             
             <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 space-y-8">
-              <div className="flex items-center gap-2 border-b pb-3"><ImageIcon size={20} className="text-primary"/> <h3 className="font-bold text-lg">메인 화면 (Hero) 설정</h3></div>
+              <div className="flex items-center gap-2 border-b pb-3"><ImageIcon size={20} className="text-primary"/> <h3 className="font-bold text-lg">텍스트 컨텐츠 설정</h3></div>
               <div className="space-y-6">
                 <div>
                   <label className="text-xs font-bold text-gray-400 block mb-1 uppercase tracking-wider">메인 타이틀 (줄바꿈은 \n 입력)</label>
@@ -235,10 +322,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 <div>
                   <label className="text-xs font-bold text-gray-400 block mb-1 uppercase tracking-wider">설명 문구</label>
                   <textarea name="heroDescription" value={config.heroDescription} onChange={handleConfigChange} className="w-full border p-3 rounded-lg h-24 focus:ring-2 focus:ring-primary/20 outline-none" />
-                </div>
-                <div>
-                  <label className="text-xs font-bold text-gray-400 block mb-1 uppercase tracking-wider">배경 이미지 URL</label>
-                  <input name="heroImage" value={config.heroImage} onChange={handleConfigChange} className="w-full border p-3 rounded-lg focus:ring-2 focus:ring-primary/20 outline-none" />
                 </div>
               </div>
             </div>
@@ -264,7 +347,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 </div>
               </div>
             </div>
-            <div className="text-center text-gray-400 text-sm italic py-4">모든 설정은 수정 즉시 기기에 자동 저장됩니다.</div>
           </div>
         ) : (
           <div className="max-w-xl space-y-8 animate-fade-in-up">
