@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Menu, X, Instagram, Facebook, Share2 } from 'lucide-react';
 import { NavItem, SiteConfig } from '../types';
 import { TermsModal, PrivacyModal } from './LegalModals';
+import { motion, useScroll, useSpring } from 'framer-motion';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -55,6 +56,14 @@ export const Layout: React.FC<LayoutProps> = ({ children, config, onNavigate, cu
   const [showTerms, setShowTerms] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
 
+  // Scroll Progress Logic
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -91,6 +100,12 @@ export const Layout: React.FC<LayoutProps> = ({ children, config, onNavigate, cu
 
   return (
     <div className="min-h-screen flex flex-col font-sans text-gray-800">
+      {/* Scroll Progress Bar */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-1 bg-primary z-[100] origin-left"
+        style={{ scaleX }}
+      />
+
       {/* Navbar */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -115,11 +130,12 @@ export const Layout: React.FC<LayoutProps> = ({ children, config, onNavigate, cu
               <button
                 key={item.label}
                 onClick={() => handleNavClick(item.href)}
-                className={`text-[15px] font-bold tracking-tight transition-colors hover:text-primary ${
+                className={`text-[15px] font-bold tracking-tight transition-colors hover:text-primary relative group ${
                   isScrolled ? 'text-gray-700' : 'text-gray-800'
                 }`}
               >
                 {item.label}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
               </button>
             ))}
           </nav>
