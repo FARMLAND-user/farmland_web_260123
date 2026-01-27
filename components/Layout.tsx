@@ -42,6 +42,9 @@ export const Layout: React.FC<LayoutProps> = ({ children, config, onNavigate, cu
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
+  
+  // Secret admin access state
+  const [adminClickCount, setAdminClickCount] = useState(0);
 
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
@@ -63,6 +66,18 @@ export const Layout: React.FC<LayoutProps> = ({ children, config, onNavigate, cu
       onNavigate('admin');
     }
     setIsMobileMenuOpen(false);
+  };
+
+  // Secret function to enter admin mode
+  const handleSecretAdmin = () => {
+    setAdminClickCount(prev => {
+      const next = prev + 1;
+      if (next >= 5) {
+        onNavigate('admin');
+        return 0;
+      }
+      return next;
+    });
   };
 
   return (
@@ -100,10 +115,16 @@ export const Layout: React.FC<LayoutProps> = ({ children, config, onNavigate, cu
             </div>
           </div>
           <div className="border-t border-zinc-800 mt-12 pt-8 flex justify-between items-center text-xs text-gray-500">
-            <p>&copy; {new Date().getFullYear()} {config.companyName}.</p>
+            <p 
+              className="cursor-default select-none" 
+              onClick={handleSecretAdmin}
+              title="Only me"
+            >
+              &copy; {new Date().getFullYear()} {config.companyName}.
+            </p>
             <div className="flex gap-4">
+               <button onClick={() => setShowTerms(true)} className="hover:text-white">이용약관</button>
                <button onClick={() => setShowPrivacy(true)} className="hover:text-white">개인정보처리방침</button>
-               <button onClick={() => onNavigate('admin')} className="flex items-center gap-1 hover:text-white opacity-50"><Lock size={12}/> 관리자</button>
             </div>
           </div>
         </div>
