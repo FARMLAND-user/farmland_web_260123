@@ -1,4 +1,3 @@
-
 import { Post, PostCategory, SiteConfig } from './types';
 
 export const INITIAL_CONFIG: SiteConfig = {
@@ -13,7 +12,21 @@ export const INITIAL_CONFIG: SiteConfig = {
   heroImage: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=2000",
   aboutImage: "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&q=80&w=1200",
   bannerImage: "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=2000",
-  adminPassword: "admin1234"
+  adminPassword: "admin1234",
+  // 추가된 텍스트 기본값
+  aboutSubtitle: "OUR PHILOSOPHY",
+  aboutTitle: "건강한 식탁을 위한\n끊임없는 연구와 노력",
+  aboutDescription: "FARMLAND는 단순히 농산물을 유통하는 것을 넘어, 철저한 품질 관리와 최신 전처리 공정을 통해 고객사의 비즈니스에 핵심적인 가치를 더합니다.",
+  businessSubtitle: "CORE BUSINESS",
+  businessTitle: "비즈니스 핵심 역량",
+  bannerSubtitle: "SMART FARMING FUTURE",
+  bannerTitle: "자연과 기술이 그리는\n새로운 농업의 가치",
+  bannerDescription: "가장 깨끗한 땅에서 자란 결실을 가장 안전하게 전달하기 위해\n팜랜드의 기술은 멈추지 않고 진화합니다.",
+  newsSubtitle: "NEWS & MEDIA",
+  newsTitle: "최신 소식",
+  contactSubtitle: "CONNECT WITH US",
+  contactTitle: "비즈니스 파트너십 문의",
+  contactDescription: "팜랜드의 고품질 농산물과 효율적인 전처리 시스템을 통해 귀사의 성공을 지원합니다. 지금 바로 파트너십을 시작해보세요."
 };
 
 export const INITIAL_POSTS: Post[] = [

@@ -1,7 +1,6 @@
-
 import React, { useState, useRef } from 'react';
 import { Post, SiteConfig, PostCategory } from '../types';
-import { Settings, PenTool, Layout as LayoutIcon, Trash2, Plus, Save, ArrowLeft, Lock, Image as ImageIcon, User, Upload } from 'lucide-react';
+import { Settings, PenTool, Layout as LayoutIcon, Trash2, Plus, Save, ArrowLeft, Lock, Image as ImageIcon, User, Upload, Type } from 'lucide-react';
 
 interface AdminDashboardProps {
   posts: Post[];
@@ -17,7 +16,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
-  const [activeTab, setActiveTab] = useState<'content' | 'images' | 'settings' | 'account'>('content');
+  const [activeTab, setActiveTab] = useState<'content' | 'images' | 'text' | 'settings' | 'account'>('content');
   
   // Post state
   const [newPost, setNewPost] = useState<Partial<Post>>({
@@ -130,8 +129,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <button onClick={() => setActiveTab('images')} className={`flex items-center gap-3 p-3 rounded w-full text-left transition-colors ${activeTab === 'images' ? 'bg-primary' : 'hover:bg-zinc-800'}`}>
             <ImageIcon size={18}/> 이미지 관리
           </button>
+          <button onClick={() => setActiveTab('text')} className={`flex items-center gap-3 p-3 rounded w-full text-left transition-colors ${activeTab === 'text' ? 'bg-primary' : 'hover:bg-zinc-800'}`}>
+            <Type size={18}/> 텍스트 관리
+          </button>
           <button onClick={() => setActiveTab('settings')} className={`flex items-center gap-3 p-3 rounded w-full text-left transition-colors ${activeTab === 'settings' ? 'bg-primary' : 'hover:bg-zinc-800'}`}>
-            <LayoutIcon size={18}/> 사이트 설정
+            <LayoutIcon size={18}/> 기본 정보 설정
           </button>
           <button onClick={() => setActiveTab('account')} className={`flex items-center gap-3 p-3 rounded w-full text-left transition-colors ${activeTab === 'account' ? 'bg-primary' : 'hover:bg-zinc-800'}`}>
             <User size={18}/> 계정 설정
@@ -147,9 +149,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       <main className="flex-1 p-10 overflow-y-auto">
         {activeTab === 'content' ? (
           <div className="max-w-4xl space-y-8 animate-fade-in-up">
-            <h1 className="text-2xl font-bold">게시물 및 소식 이미지 관리</h1>
+            <h1 className="text-2xl font-bold">게시물 및 소식 관리</h1>
             <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200">
-               <h3 className="font-bold mb-6 text-lg flex items-center gap-2"><Plus size={20} className="text-primary"/> 새 소식 추가 (최신소식 이미지 포함)</h3>
+               <h3 className="font-bold mb-6 text-lg flex items-center gap-2"><Plus size={20} className="text-primary"/> 새 소식 추가</h3>
                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                  <div>
                    <label className="block text-xs font-bold text-gray-400 mb-1 uppercase">제목</label>
@@ -237,112 +239,171 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             <p className="text-gray-500">홈페이지의 각 섹션별 이미지를 직접 수정할 수 있습니다.</p>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Hero Image Section */}
               <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
                 <h3 className="font-bold mb-4 text-lg border-b pb-2">메인 히어로 이미지</h3>
                 <div className="mb-4 aspect-video rounded-lg overflow-hidden border">
                   <img src={config.heroImage} className="w-full h-full object-cover" />
                 </div>
                 <div className="space-y-4">
-                  <input 
-                    type="file" accept="image/*" id="hero-img-up" className="hidden" 
-                    onChange={e => handleConfigImageUpload('heroImage', e)} 
-                  />
+                  <input type="file" accept="image/*" id="hero-img-up" className="hidden" onChange={e => handleConfigImageUpload('heroImage', e)} />
                   <label htmlFor="hero-img-up" className="w-full flex items-center justify-center gap-2 bg-primary text-white py-3 rounded-lg cursor-pointer hover:bg-primary-dark transition-colors font-bold">
-                    <Upload size={18}/> 이미지 교체하기
+                    <Upload size={18}/> 이미지 교체
                   </label>
-                  <input 
-                    name="heroImage" value={config.heroImage} onChange={handleConfigChange}
-                    className="w-full border p-2 text-xs rounded outline-none focus:ring-1 focus:ring-primary" 
-                    placeholder="또는 이미지 URL 직접 입력"
-                  />
+                  <input name="heroImage" value={config.heroImage} onChange={handleConfigChange} className="w-full border p-2 text-xs rounded outline-none" placeholder="이미지 URL" />
                 </div>
               </div>
 
-              {/* About Section Image */}
               <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
                 <h3 className="font-bold mb-4 text-lg border-b pb-2">OUR PHILOSOPHY 이미지</h3>
                 <div className="mb-4 aspect-video rounded-lg overflow-hidden border">
                   <img src={config.aboutImage} className="w-full h-full object-cover" />
                 </div>
                 <div className="space-y-4">
-                  <input 
-                    type="file" accept="image/*" id="about-img-up" className="hidden" 
-                    onChange={e => handleConfigImageUpload('aboutImage', e)} 
-                  />
+                  <input type="file" accept="image/*" id="about-img-up" className="hidden" onChange={e => handleConfigImageUpload('aboutImage', e)} />
                   <label htmlFor="about-img-up" className="w-full flex items-center justify-center gap-2 bg-primary text-white py-3 rounded-lg cursor-pointer hover:bg-primary-dark transition-colors font-bold">
-                    <Upload size={18}/> 이미지 교체하기
+                    <Upload size={18}/> 이미지 교체
                   </label>
-                  <input 
-                    name="aboutImage" value={config.aboutImage} onChange={handleConfigChange}
-                    className="w-full border p-2 text-xs rounded outline-none focus:ring-1 focus:ring-primary" 
-                    placeholder="또는 이미지 URL 직접 입력"
-                  />
+                  <input name="aboutImage" value={config.aboutImage} onChange={handleConfigChange} className="w-full border p-2 text-xs rounded outline-none" placeholder="이미지 URL" />
                 </div>
               </div>
 
-              {/* Banner Section Image */}
               <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 md:col-span-2">
-                <h3 className="font-bold mb-4 text-lg border-b pb-2">농산물 배너 이미지 (Trendy Banner)</h3>
+                <h3 className="font-bold mb-4 text-lg border-b pb-2">농산물 배너 이미지</h3>
                 <div className="mb-4 h-48 rounded-lg overflow-hidden border">
                   <img src={config.bannerImage} className="w-full h-full object-cover" />
                 </div>
-                <div className="flex flex-col md:flex-row gap-4">
-                  <div className="flex-1 space-y-4">
-                    <input 
-                      type="file" accept="image/*" id="banner-img-up" className="hidden" 
-                      onChange={e => handleConfigImageUpload('bannerImage', e)} 
-                    />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <input type="file" accept="image/*" id="banner-img-up" className="hidden" onChange={e => handleConfigImageUpload('bannerImage', e)} />
                     <label htmlFor="banner-img-up" className="w-full flex items-center justify-center gap-2 bg-primary text-white py-4 rounded-lg cursor-pointer hover:bg-primary-dark transition-colors font-bold">
-                      <Upload size={18}/> 배너 이미지 교체하기
+                      <Upload size={18}/> 배너 이미지 교체
                     </label>
                   </div>
-                  <div className="flex-1 flex flex-col justify-center">
-                    <label className="text-xs text-gray-400 font-bold mb-1">배너 이미지 URL 직접 입력</label>
-                    <input 
-                      name="bannerImage" value={config.bannerImage} onChange={handleConfigChange}
-                      className="w-full border p-3 text-sm rounded outline-none focus:ring-1 focus:ring-primary" 
-                    />
-                  </div>
+                  <input name="bannerImage" value={config.bannerImage} onChange={handleConfigChange} className="w-full border p-3 text-sm rounded outline-none" placeholder="배너 이미지 URL" />
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : activeTab === 'text' ? (
+          <div className="max-w-4xl space-y-12 animate-fade-in-up">
+            <h1 className="text-2xl font-bold">텍스트 컨텐츠 관리</h1>
+            <p className="text-gray-500">홈페이지 각 영역에 들어가는 텍스트를 직접 수정합니다.</p>
+
+            {/* Hero Area */}
+            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 space-y-6">
+              <h3 className="font-bold text-lg border-b pb-3 text-primary flex items-center gap-2"><LayoutIcon size={20}/> 메인 히어로 영역</h3>
+              <div className="grid gap-6">
+                <div>
+                  <label className="text-xs font-bold text-gray-400 block mb-1 uppercase">서브 타이틀 (Subtitle)</label>
+                  <input name="heroSubtitle" value={config.heroSubtitle} onChange={handleConfigChange} className="w-full border p-3 rounded-lg" />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-gray-400 block mb-1 uppercase">메인 타이틀 (Title, 줄바꿈은 \n)</label>
+                  <textarea name="heroTitle" value={config.heroTitle} onChange={handleConfigChange} className="w-full border p-3 rounded-lg h-24" />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-gray-400 block mb-1 uppercase">설명 문구 (Description)</label>
+                  <textarea name="heroDescription" value={config.heroDescription} onChange={handleConfigChange} className="w-full border p-3 rounded-lg h-24" />
+                </div>
+              </div>
+            </div>
+
+            {/* About Area */}
+            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 space-y-6">
+              <h3 className="font-bold text-lg border-b pb-3 text-primary flex items-center gap-2"><LayoutIcon size={20}/> OUR PHILOSOPHY 영역</h3>
+              <div className="grid gap-6">
+                <div>
+                  <label className="text-xs font-bold text-gray-400 block mb-1 uppercase">섹션 소제목</label>
+                  <input name="aboutSubtitle" value={config.aboutSubtitle} onChange={handleConfigChange} className="w-full border p-3 rounded-lg" />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-gray-400 block mb-1 uppercase">섹션 대제목</label>
+                  <textarea name="aboutTitle" value={config.aboutTitle} onChange={handleConfigChange} className="w-full border p-3 rounded-lg h-24" />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-gray-400 block mb-1 uppercase">섹션 설명 문구</label>
+                  <textarea name="aboutDescription" value={config.aboutDescription} onChange={handleConfigChange} className="w-full border p-3 rounded-lg h-32" />
+                </div>
+              </div>
+            </div>
+
+            {/* Business Area */}
+            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 space-y-6">
+              <h3 className="font-bold text-lg border-b pb-3 text-primary flex items-center gap-2"><LayoutIcon size={20}/> 비즈니스 영역</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="text-xs font-bold text-gray-400 block mb-1 uppercase">섹션 소제목</label>
+                  <input name="businessSubtitle" value={config.businessSubtitle} onChange={handleConfigChange} className="w-full border p-3 rounded-lg" />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-gray-400 block mb-1 uppercase">섹션 대제목</label>
+                  <input name="businessTitle" value={config.businessTitle} onChange={handleConfigChange} className="w-full border p-3 rounded-lg" />
+                </div>
+              </div>
+            </div>
+
+            {/* Banner Area */}
+            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 space-y-6">
+              <h3 className="font-bold text-lg border-b pb-3 text-primary flex items-center gap-2"><LayoutIcon size={20}/> 배너 배너 영역 (Trendy Banner)</h3>
+              <div className="grid gap-6">
+                <div>
+                  <label className="text-xs font-bold text-gray-400 block mb-1 uppercase">배너 소제목</label>
+                  <input name="bannerSubtitle" value={config.bannerSubtitle} onChange={handleConfigChange} className="w-full border p-3 rounded-lg" />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-gray-400 block mb-1 uppercase">배너 대제목</label>
+                  <textarea name="bannerTitle" value={config.bannerTitle} onChange={handleConfigChange} className="w-full border p-3 rounded-lg h-24" />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-gray-400 block mb-1 uppercase">배너 설명 문구</label>
+                  <textarea name="bannerDescription" value={config.bannerDescription} onChange={handleConfigChange} className="w-full border p-3 rounded-lg h-24" />
+                </div>
+              </div>
+            </div>
+
+            {/* News & Contact Area */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 space-y-6">
+                <h3 className="font-bold text-lg border-b pb-3 text-primary">소식 영역</h3>
+                <div>
+                  <label className="text-xs font-bold text-gray-400 block mb-1 uppercase">소제목</label>
+                  <input name="newsSubtitle" value={config.newsSubtitle} onChange={handleConfigChange} className="w-full border p-3 rounded-lg mb-4" />
+                  <label className="text-xs font-bold text-gray-400 block mb-1 uppercase">대제목</label>
+                  <input name="newsTitle" value={config.newsTitle} onChange={handleConfigChange} className="w-full border p-3 rounded-lg" />
+                </div>
+              </div>
+              <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 space-y-6">
+                <h3 className="font-bold text-lg border-b pb-3 text-primary">문의 영역</h3>
+                <div>
+                  <label className="text-xs font-bold text-gray-400 block mb-1 uppercase">소제목</label>
+                  <input name="contactSubtitle" value={config.contactSubtitle} onChange={handleConfigChange} className="w-full border p-3 rounded-lg mb-4" />
+                  <label className="text-xs font-bold text-gray-400 block mb-1 uppercase">대제목</label>
+                  <input name="contactTitle" value={config.contactTitle} onChange={handleConfigChange} className="w-full border p-3 rounded-lg mb-4" />
+                  <label className="text-xs font-bold text-gray-400 block mb-1 uppercase">설명 문구</label>
+                  <textarea name="contactDescription" value={config.contactDescription} onChange={handleConfigChange} className="w-full border p-3 rounded-lg h-24" />
                 </div>
               </div>
             </div>
           </div>
         ) : activeTab === 'settings' ? (
           <div className="max-w-3xl space-y-8 animate-fade-in-up">
-            <h1 className="text-2xl font-bold">사이트 설정</h1>
-            
+            <h1 className="text-2xl font-bold">기본 정보 설정</h1>
             <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 space-y-8">
-              <div className="flex items-center gap-2 border-b pb-3"><ImageIcon size={20} className="text-primary"/> <h3 className="font-bold text-lg">텍스트 컨텐츠 설정</h3></div>
-              <div className="space-y-6">
-                <div>
-                  <label className="text-xs font-bold text-gray-400 block mb-1 uppercase tracking-wider">메인 타이틀 (줄바꿈은 \n 입력)</label>
-                  <textarea name="heroTitle" value={config.heroTitle} onChange={handleConfigChange} className="w-full border p-3 rounded-lg h-24 font-medium focus:ring-2 focus:ring-primary/20 outline-none" />
-                </div>
-                <div>
-                  <label className="text-xs font-bold text-gray-400 block mb-1 uppercase tracking-wider">설명 문구</label>
-                  <textarea name="heroDescription" value={config.heroDescription} onChange={handleConfigChange} className="w-full border p-3 rounded-lg h-24 focus:ring-2 focus:ring-primary/20 outline-none" />
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 space-y-8">
-              <div className="flex items-center gap-2 border-b pb-3"><LayoutIcon size={20} className="text-primary"/> <h3 className="font-bold text-lg">기본 회사 정보</h3></div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="text-xs font-bold text-gray-400 block mb-1 uppercase tracking-wider">회사명</label>
+                  <label className="text-xs font-bold text-gray-400 block mb-1 uppercase">회사명</label>
                   <input name="companyName" value={config.companyName} onChange={handleConfigChange} className="border p-3 rounded-lg w-full" />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-gray-400 block mb-1 uppercase tracking-wider">연락처</label>
+                  <label className="text-xs font-bold text-gray-400 block mb-1 uppercase">연락처</label>
                   <input name="contactPhone" value={config.contactPhone} onChange={handleConfigChange} className="border p-3 rounded-lg w-full" />
                 </div>
                 <div className="col-span-1 md:col-span-2">
-                  <label className="text-xs font-bold text-gray-400 block mb-1 uppercase tracking-wider">이메일</label>
+                  <label className="text-xs font-bold text-gray-400 block mb-1 uppercase">이메일</label>
                   <input name="contactEmail" value={config.contactEmail} onChange={handleConfigChange} className="border p-3 rounded-lg w-full" />
                 </div>
                 <div className="col-span-1 md:col-span-2">
-                  <label className="text-xs font-bold text-gray-400 block mb-1 uppercase tracking-wider">주소</label>
+                  <label className="text-xs font-bold text-gray-400 block mb-1 uppercase">주소</label>
                   <input name="address" value={config.address} onChange={handleConfigChange} className="border p-3 rounded-lg w-full" />
                 </div>
               </div>
@@ -355,39 +416,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <h3 className="font-bold mb-6 text-lg flex items-center gap-2"><Lock size={20} className="text-primary"/> 비밀번호 변경</h3>
               <form onSubmit={handleChangePassword} className="space-y-6">
                 <div>
-                  <label className="block text-xs font-bold text-gray-400 mb-1 uppercase tracking-wider">현재 비밀번호</label>
-                  <input 
-                    type="password" 
-                    value={pwdForm.current}
-                    onChange={e => setPwdForm({...pwdForm, current: e.target.value})}
-                    className="w-full border p-3 rounded-lg outline-none focus:ring-2 focus:ring-primary/20"
-                    placeholder="현재 비밀번호를 입력하세요"
-                    required
-                  />
+                  <label className="block text-xs font-bold text-gray-400 mb-1 uppercase">현재 비밀번호</label>
+                  <input type="password" value={pwdForm.current} onChange={e => setPwdForm({...pwdForm, current: e.target.value})} className="w-full border p-3 rounded-lg" placeholder="현재 비밀번호" required />
                 </div>
                 <div className="border-t pt-6">
-                  <label className="block text-xs font-bold text-gray-400 mb-1 uppercase tracking-wider">새 비밀번호</label>
-                  <input 
-                    type="password" 
-                    value={pwdForm.next}
-                    onChange={e => setPwdForm({...pwdForm, next: e.target.value})}
-                    className="w-full border p-3 rounded-lg outline-none focus:ring-2 focus:ring-primary/20 mb-4"
-                    placeholder="새로운 비밀번호 (4자 이상)"
-                    required
-                  />
-                  <label className="block text-xs font-bold text-gray-400 mb-1 uppercase tracking-wider">새 비밀번호 확인</label>
-                  <input 
-                    type="password" 
-                    value={pwdForm.confirm}
-                    onChange={e => setPwdForm({...pwdForm, confirm: e.target.value})}
-                    className="w-full border p-3 rounded-lg outline-none focus:ring-2 focus:ring-primary/20"
-                    placeholder="비밀번호를 한번 더 입력하세요"
-                    required
-                  />
+                  <label className="block text-xs font-bold text-gray-400 mb-1 uppercase">새 비밀번호</label>
+                  <input type="password" value={pwdForm.next} onChange={e => setPwdForm({...pwdForm, next: e.target.value})} className="w-full border p-3 rounded-lg mb-4" placeholder="4자 이상" required />
+                  <label className="block text-xs font-bold text-gray-400 mb-1 uppercase">새 비밀번호 확인</label>
+                  <input type="password" value={pwdForm.confirm} onChange={e => setPwdForm({...pwdForm, confirm: e.target.value})} className="w-full border p-3 rounded-lg" placeholder="확인 입력" required />
                 </div>
-                <button type="submit" className="w-full bg-primary text-white py-3 rounded-lg font-bold shadow-lg shadow-primary/20 hover:bg-primary-dark transition-all">
-                  비밀번호 저장
-                </button>
+                <button type="submit" className="w-full bg-primary text-white py-3 rounded-lg font-bold">저장하기</button>
               </form>
             </div>
           </div>

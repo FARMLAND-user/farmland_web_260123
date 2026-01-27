@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Post, SiteConfig } from '../types';
 import { ArrowRight, Leaf, Truck, Building2, MapPin, Phone, Mail } from 'lucide-react';
@@ -80,7 +79,8 @@ export const Home: React.FC<HomeProps> = ({ posts, config }) => {
     visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
   };
 
-  const formatTitle = (text: string) => {
+  const formatText = (text: string) => {
+    if (!text) return "";
     return text.split('\n').map((line, i) => {
       const parts = line.split('팜랜드');
       const content = parts.length > 1 ? (
@@ -123,7 +123,7 @@ export const Home: React.FC<HomeProps> = ({ posts, config }) => {
             {config.heroSubtitle}
           </motion.span>
           <motion.h1 variants={fadeInUp} className="text-3xl sm:text-4xl md:text-6xl font-black mb-6 leading-tight tracking-tight drop-shadow-2xl">
-            {formatTitle(config.heroTitle)}
+            {formatText(config.heroTitle)}
           </motion.h1>
           <motion.p variants={fadeInUp} className="text-base md:text-xl text-gray-200 max-w-2xl mx-auto mb-10 font-medium leading-relaxed drop-shadow-lg whitespace-pre-line">
              {config.heroDescription}
@@ -167,13 +167,12 @@ export const Home: React.FC<HomeProps> = ({ posts, config }) => {
               viewport={{ once: true }}
               transition={{ duration: 1 }}
             >
-              <h2 className="text-primary font-bold tracking-widest text-sm mb-4 uppercase">OUR PHILOSOPHY</h2>
+              <h2 className="text-primary font-bold tracking-widest text-sm mb-4 uppercase">{config.aboutSubtitle}</h2>
               <h3 className="text-3xl md:text-4xl lg:text-5xl font-black text-gray-900 mb-8 leading-tight">
-                건강한 식탁을 위한<br />
-                <span className="text-primary-light underline decoration-primary/20 underline-offset-8">끊임없는 연구와 노력</span>
+                {formatText(config.aboutTitle)}
               </h3>
-              <p className="text-gray-600 mb-10 leading-loose text-lg font-light">
-                {config.companyName}는 단순히 농산물을 유통하는 것을 넘어, 철저한 품질 관리와 최신 전처리 공정을 통해 고객사의 비즈니스에 핵심적인 가치를 더합니다.
+              <p className="text-gray-600 mb-10 leading-loose text-lg font-light whitespace-pre-line">
+                {config.aboutDescription}
               </p>
               <div className="grid grid-cols-2 gap-8 pt-8 border-t border-gray-100">
                 <div>
@@ -194,8 +193,8 @@ export const Home: React.FC<HomeProps> = ({ posts, config }) => {
       <section id="business" className="py-24 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-20">
-            <h2 className="text-primary font-bold tracking-widest text-sm mb-4 uppercase">CORE BUSINESS</h2>
-            <h3 className="text-3xl md:text-4xl font-black text-gray-900">비즈니스 핵심 역량</h3>
+            <h2 className="text-primary font-bold tracking-widest text-sm mb-4 uppercase">{config.businessSubtitle}</h2>
+            <h3 className="text-3xl md:text-4xl font-black text-gray-900">{config.businessTitle}</h3>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
@@ -235,13 +234,12 @@ export const Home: React.FC<HomeProps> = ({ posts, config }) => {
             transition={{ duration: 1.2 }}
             className="max-w-4xl border-l-4 border-primary-light pl-8 md:pl-12"
           >
-            <span className="text-primary-light font-bold tracking-[0.4em] text-xs md:text-sm uppercase mb-6 block">SMART FARMING FUTURE</span>
+            <span className="text-primary-light font-bold tracking-[0.4em] text-xs md:text-sm uppercase mb-6 block">{config.bannerSubtitle}</span>
             <h2 className="text-white text-4xl md:text-7xl font-black mb-8 leading-[1.1] tracking-tight">
-              자연과 기술이 그리는<br />
-              <span className="text-white/70">새로운 농업의 가치</span>
+              {formatText(config.bannerTitle)}
             </h2>
-            <p className="text-gray-200 text-lg md:text-2xl font-light leading-relaxed max-w-2xl">
-              가장 깨끗한 땅에서 자란 결실을 가장 안전하게 전달하기 위해<br className="hidden md:block" /> 팜랜드의 기술은 멈추지 않고 진화합니다.
+            <p className="text-gray-200 text-lg md:text-2xl font-light leading-relaxed max-w-2xl whitespace-pre-line">
+              {config.bannerDescription}
             </p>
           </motion.div>
         </div>
@@ -253,8 +251,8 @@ export const Home: React.FC<HomeProps> = ({ posts, config }) => {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6">
             <div>
-              <h2 className="text-primary font-bold tracking-widest text-sm mb-4 uppercase">NEWS & MEDIA</h2>
-              <h3 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">최신 소식</h3>
+              <h2 className="text-primary font-bold tracking-widest text-sm mb-4 uppercase">{config.newsSubtitle}</h2>
+              <h3 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">{config.newsTitle}</h3>
             </div>
             <button className="text-sm font-bold text-gray-400 hover:text-primary transition-colors flex items-center gap-2">
               전체보기 <ArrowRight size={16} />
@@ -290,10 +288,10 @@ export const Home: React.FC<HomeProps> = ({ posts, config }) => {
           <div className="flex flex-col lg:flex-row items-start gap-20">
             <div className="lg:w-1/2 space-y-16">
               <div>
-                <span className="text-primary font-black tracking-[0.3em] text-xs uppercase block mb-6">CONNECT WITH US</span>
-                <h3 className="text-4xl md:text-5xl font-black mb-10 tracking-tight">비즈니스 파트너십 문의</h3>
-                <p className="text-gray-400 text-lg font-light leading-relaxed max-w-lg">
-                  팜랜드의 고품질 농산물과 효율적인 전처리 시스템을 통해 귀사의 성공을 지원합니다. 지금 바로 파트너십을 시작해보세요.
+                <span className="text-primary font-black tracking-[0.3em] text-xs uppercase block mb-6">{config.contactSubtitle}</span>
+                <h3 className="text-4xl md:text-5xl font-black mb-10 tracking-tight">{config.contactTitle}</h3>
+                <p className="text-gray-400 text-lg font-light leading-relaxed max-w-lg whitespace-pre-line">
+                  {config.contactDescription}
                 </p>
               </div>
 
