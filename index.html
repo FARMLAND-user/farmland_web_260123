@@ -17,7 +17,7 @@
     <meta property="og:site_name" content="FARMLAND">
     <meta property="og:locale" content="ko_KR">
 
-    <!-- 1. Tailwind CSS (CDN for simplicity in this setup) -->
+    <!-- 1. Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- 2. Google Fonts -->
@@ -26,22 +26,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     
     <script>
-      /* [디자인] 테마 컬러 및 폰트 설정 - 브랜드 색상 변경 시 여기를 수정하세요 */
       tailwind.config = {
         theme: {
           extend: {
             fontFamily: {
               sans: ['"Noto Sans KR"', 'sans-serif'],
-              serif: ['"Noto Sans KR"', 'sans-serif'], 
             },
             colors: {
               primary: {
-                DEFAULT: '#556B2F', // Olive Green
-                light: '#6B8E23',
+                DEFAULT: '#556B2F', 
+                light: '#A3E635', // 밝은 라임 그린으로 수정
                 dark: '#384a1f',
               },
               accent: {
-                DEFAULT: '#333333', // Charcoal
+                DEFAULT: '#333333', 
                 beige: '#F5F5DC',
               }
             }
@@ -50,7 +48,6 @@
       }
     </script>
     <style>
-      /* [디자인] 전역 커스텀 스타일 및 애니메이션 */
       ::-webkit-scrollbar { width: 8px; }
       ::-webkit-scrollbar-track { background: #f1f1f1; }
       ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
@@ -65,18 +62,18 @@
 <script type="importmap">
 {
   "imports": {
-    "react": "https://esm.sh/react@^19.2.4",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
-    "react/": "https://esm.sh/react@^19.2.4/",
     "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
     "vite": "https://esm.sh/vite@^7.3.1",
     "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4",
     "framer-motion": "https://esm.sh/framer-motion@^12.29.2"
   }
 }
 </script>
 </head>
-  <body class="bg-white text-gray-800 antialiased selection:bg-primary selection:text-white font-sans">
+<body class="bg-white text-gray-800 antialiased selection:bg-primary selection:text-white font-sans">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
 </body>

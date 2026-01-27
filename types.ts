@@ -19,6 +19,10 @@ export interface SiteConfig {
   contactEmail: string;
   contactPhone: string;
   address: string;
+  heroTitle: string;
+  heroSubtitle: string;
+  heroDescription: string;
+  heroImage: string;
 }
 
 export interface NavItem {
