@@ -1,7 +1,9 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Post, SiteConfig } from '../types';
 import { ArrowRight, Leaf, Truck, Building2, MapPin, Phone, Mail } from 'lucide-react';
-import { motion, useScroll, useTransform, useInView, useSpring, animate } from 'framer-motion';
+// Import Variants from framer-motion for correct TypeScript typing of animation objects
+import { motion, useScroll, useTransform, useInView, useSpring, animate, Variants } from 'framer-motion';
 
 interface HomeProps {
   posts: Post[];
@@ -62,12 +64,14 @@ export const Home: React.FC<HomeProps> = ({ posts, config }) => {
     }
   };
 
-  const fadeInUp = {
+  // Define variants with the Variants type to ensure 'ease' property is correctly inferred as an Easing type
+  const fadeInUp: Variants = {
     hidden: { opacity: 0, y: 60 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
   };
 
-  const staggerContainer = {
+  // Define variants with the Variants type for consistency
+  const staggerContainer: Variants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
   };
