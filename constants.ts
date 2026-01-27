@@ -9,7 +9,8 @@ export const INITIAL_CONFIG: SiteConfig = {
   heroTitle: "자연이 주는\n정직한 가치, 팜랜드",
   heroSubtitle: "Premium Agriculture",
   heroDescription: "우리는 땅의 정직함을 믿습니다.\n첨단 기술과 자연의 조화로 최고의 농산물을 제공합니다.",
-  heroImage: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2832&auto=format&fit=crop"
+  heroImage: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2832&auto=format&fit=crop",
+  adminPassword: "admin1234" // 기본 비밀번호 설정
 };
 
 export const INITIAL_POSTS: Post[] = [

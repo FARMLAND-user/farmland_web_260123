@@ -72,11 +72,6 @@ export const Home: React.FC<HomeProps> = ({ posts, config }) => {
     visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
   };
 
-  const cardVariant = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
-  };
-
   const formatTitle = (text: string) => {
     return text.split('\n').map((line, i) => {
       const parts = line.split('팜랜드');
@@ -214,22 +209,82 @@ export const Home: React.FC<HomeProps> = ({ posts, config }) => {
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section id="contact" className="py-20 bg-[#222] text-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto bg-white rounded-2xl p-8 md:p-12 text-gray-800 shadow-2xl">
-            <h3 className="text-2xl font-bold mb-8 text-center">비즈니스 문의하기</h3>
-            <form className="space-y-6" onSubmit={handleSubmit}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <input type="text" name="name" required className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3" placeholder="이름" />
-                <input type="text" name="phone" required className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3" placeholder="연락처" />
+      {/* Contact Section - Restored to match image */}
+      <section id="contact" className="py-24 bg-[#222] text-white overflow-hidden">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="flex flex-col lg:flex-row items-start gap-16">
+            {/* Left Content */}
+            <div className="lg:w-1/2 space-y-12">
+              <div>
+                <span className="text-primary font-bold tracking-widest text-[13px] uppercase block mb-4">CONTACT US</span>
+                <h3 className="text-4xl font-black mb-8">비즈니스 문의</h3>
+                <p className="text-gray-400 text-base font-light leading-relaxed">
+                  FARMLAND와 함께 성장할 파트너를 찾습니다.<br />
+                  농산물 대량 공급, 계약 재배, 기타 협력 제안 등 무엇이든 문의해 주세요.
+                </p>
               </div>
-              <input type="email" name="email" required className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3" placeholder="이메일" />
-              <textarea rows={4} name="message" required className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3" placeholder="문의내용"></textarea>
-              <button type="submit" disabled={isSubmitting} className="w-full bg-primary text-white font-bold py-4 rounded-lg shadow-lg hover:bg-primary-dark transition-all">
-                {isSubmitting ? '전송 중...' : '문의하기'}
-              </button>
-            </form>
+
+              <div className="space-y-10">
+                <div className="flex items-start gap-5">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+                    <MapPin className="text-primary" size={20} />
+                  </div>
+                  <div>
+                    <h4 className="text-white font-black text-lg mb-1">Address</h4>
+                    <p className="text-gray-400 text-[15px] font-light">{config.address}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-5">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+                    <Phone className="text-primary" size={20} />
+                  </div>
+                  <div>
+                    <h4 className="text-white font-black text-lg mb-1">Phone</h4>
+                    <p className="text-gray-400 text-[15px] font-light">{config.contactPhone}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-5">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+                    <Mail className="text-primary" size={20} />
+                  </div>
+                  <div>
+                    <h4 className="text-white font-black text-lg mb-1">Email</h4>
+                    <p className="text-gray-400 text-[15px] font-light">{config.contactEmail}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Form Card */}
+            <div className="lg:w-1/2 w-full">
+              <div className="bg-white rounded-2xl p-8 md:p-12 shadow-2xl animate-fade-in-up">
+                <form className="space-y-8" onSubmit={handleSubmit}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-2">
+                      <label className="text-[13px] font-bold text-gray-800 ml-1">이름</label>
+                      <input type="text" name="name" required className="w-full bg-gray-50 border border-gray-100 rounded-lg p-4 text-gray-800 outline-none focus:ring-2 focus:ring-primary/20 transition-all" placeholder="홍길동" />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[13px] font-bold text-gray-800 ml-1">연락처</label>
+                      <input type="text" name="phone" required className="w-full bg-gray-50 border border-gray-100 rounded-lg p-4 text-gray-800 outline-none focus:ring-2 focus:ring-primary/20 transition-all" placeholder="010-0000-0000" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[13px] font-bold text-gray-800 ml-1">이메일</label>
+                    <input type="email" name="email" required className="w-full bg-gray-50 border border-gray-100 rounded-lg p-4 text-gray-800 outline-none focus:ring-2 focus:ring-primary/20 transition-all" placeholder="example@email.com" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[13px] font-bold text-gray-800 ml-1">문의내용</label>
+                    <textarea rows={5} name="message" required className="w-full bg-gray-50 border border-gray-100 rounded-lg p-4 text-gray-800 outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none" placeholder="문의하실 내용을 입력해주세요."></textarea>
+                  </div>
+                  <button type="submit" disabled={isSubmitting} className="w-full bg-[#556B2F] text-white font-black py-5 rounded-lg shadow-xl shadow-black/10 hover:bg-[#384a1f] transition-all text-base tracking-widest">
+                    {isSubmitting ? '전송 중...' : '문의하기'}
+                  </button>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
       </section>

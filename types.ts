@@ -23,6 +23,7 @@ export interface SiteConfig {
   heroSubtitle: string;
   heroDescription: string;
   heroImage: string;
+  adminPassword?: string; // 관리자 비밀번호 필드 추가
 }
 
 export interface NavItem {
